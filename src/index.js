@@ -72,9 +72,9 @@ io.on('connection', (socket) => {
         const user = getUser(socket.id)
 
         // save the content to the disk, for example
-        fs.writeFile(`./public/tmp/${file.name}`, file.data, (err) => {
-            callback({ message: err ? "failure" : "success" });
-        });
+        // fs.writeFile(`./public/tmp/${file.name}`, file.data, (err) => {
+        //     callback({ message: err ? "failure" : "success" });
+        // });
 
         io.to(user.room).emit('file', generateFileMessage(user.username, file))
         callback()
@@ -84,9 +84,9 @@ io.on('connection', (socket) => {
         const user = getUser(socket.id)
         console.log(filename);
 
-        fs.unlink(`./public/tmp/${filename}`, (err) => {
-            callback({ message: err ? "failure" : "success" });
-        });
+        // fs.unlink(`./public/tmp/${filename}`, (err) => {
+        //     callback({ message: err ? "failure" : "success" });
+        // });
         
         io.to(user.room).emit('message', generateMessage(user.username, `delete ${filename}`))
         callback()
