@@ -137,6 +137,14 @@ button:disabled {
     padding-right: 1pc;
 }
 
+.message__file::before {
+    font-family: FontAwesome;
+    font-weight: 400;
+    content: "\f1f8 ";
+    color: #CC5C00;
+    padding-right: 1pc;
+}
+
 .message a {
     color: #0070CC;
 }

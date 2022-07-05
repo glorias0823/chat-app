@@ -17,8 +17,8 @@
 
             <div class="compose">
                 <form id="message-form">
+                    <input type="file" id="messageFile" onchange="sendFile(this.files)" />
                     <input name="message" placeholder="Message" required autocomplete="off">
-                    <div id="content"></div>
                     <button>Send</button>
                 </form>
             </div>
@@ -32,6 +32,18 @@
                 <span class="message__meta">{{createdAt}}</span>
             </p>
             <p class="message__content" onclick="clickCopy(this)">{{message}}</p>
+        </div>
+    </script>
+
+    <script id="file-template" type="text/html">
+        <div class="message">
+            <p>
+                <span class="message__name">{{username}}</span>
+                <span class="message__meta">{{createdAt}}</span>
+            </p>
+            <p class="message__file" onclick="clickDelete(this)">
+                <a href="tmp/{{filename}}" target="_blank">{{filename}}</a>
+            </p>
         </div>
     </script>
 

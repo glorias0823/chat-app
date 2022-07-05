@@ -8,6 +8,7 @@ const $messages = document.querySelector('#messages')
 
 // Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
+const fileTemplate = document.querySelector('#file-template').innerHTML
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
@@ -87,3 +88,47 @@ const clickCopy = (e) => {
         $messageFormInput.value = data
     })
 }
+
+const clickDelete = (e) => {
+    socket.emit('deleteFile', e.childNodes[1].innerHTML, (error) => {
+        
+        $messageFormInput.focus()
+
+        if (error) {
+            return console.log(error)
+        }
+
+        console.log('File deleted!')
+    })
+}
+
+const sendFile = (files) => {
+    console.log(files[0])
+    const file = {
+        name: files[0].name,
+        data: files[0]
+    }
+    socket.emit('sendFile', file, (error) => {
+        $messageFormButton.removeAttribute('disabled')
+        $messageFormInput.value = ''
+        $messageFormInput.focus()
+
+        if (error) {
+            return console.log(error)
+        }
+
+        console.log('File delivered!')
+        files.target = null
+    });
+}
+
+socket.on('file', (message) => {
+    console.log(message)
+    const html = Mustache.render(fileTemplate, {
+        username: message.username,
+        filename: message.file.name,
+        createdAt: moment(message.createdAt).format('YYYY-MM-DD h:mm a')
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
+    autoscroll()
+})
