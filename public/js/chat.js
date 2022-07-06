@@ -90,8 +90,13 @@ const clickCopy = (e) => {
 }
 
 const clickDelete = (e) => {
-    socket.emit('deleteFile', e.childNodes[1].innerHTML, (error) => {
-        
+
+    const aTag = e.nextElementSibling
+    window.URL.revokeObjectURL(aTag.href)
+    aTag.setAttribute('class', 'removed')
+
+    socket.emit('deleteFile', aTag.innerHTML, (error) => {
+
         $messageFormInput.focus()
 
         if (error) {
@@ -106,7 +111,8 @@ const sendFile = (files) => {
     console.log(files[0])
     const file = {
         name: files[0].name,
-        data: files[0]
+        data: files[0],
+        type: files[0].type
     }
     socket.emit('sendFile', file, (error) => {
         $messageFormButton.removeAttribute('disabled')
@@ -123,9 +129,13 @@ const sendFile = (files) => {
 }
 
 socket.on('file', (message) => {
-    console.log(message)
+
+    const blob = new Blob([message.file.data], { type: message.file.type })
+    const url = window.URL.createObjectURL(blob)
+
     const html = Mustache.render(fileTemplate, {
         username: message.username,
+        url,
         filename: message.file.name,
         createdAt: moment(message.createdAt).format('YYYY-MM-DD h:mm a')
     })

@@ -41,8 +41,9 @@
                 <span class="message__name">{{username}}</span>
                 <span class="message__meta">{{createdAt}}</span>
             </p>
-            <p class="message__file" onclick="clickDelete(this)">
-                <a href="tmp/{{filename}}" target="_blank">{{filename}}</a>
+            <p>
+                <i class="message__file fa fa-trash"  onclick="clickDelete(this)"></i>
+                <a href="{{url}}" target="_blank">{{filename}}</a>
             </p>
         </div>
     </script>

@@ -19,6 +19,7 @@ const generateFileMessage = (username, file) => {
         username,
         file,
         filename: file.name,
+        type: file.type,
         createdAt: new Date().getTime()
     }
 }

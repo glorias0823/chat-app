@@ -149,6 +149,11 @@ button:disabled {
     color: #0070CC;
 }
 
+.message a.removed {
+    text-decoration: line-through;
+    pointer-events: none;
+}
+
 /* Message Composition Styles */
 
 .compose {
