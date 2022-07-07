@@ -203,3 +203,27 @@ button:disabled {
     padding: 12px 24px 0 24px;
 }
 
+.divInput {
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    background-color: white;
+    background-color: -moz-field;
+    font-size: 14px;
+    border: 1px solid #eeeeee;
+    max-width: 100%;
+    padding: 12px;
+    margin: 0 16px 0 0;
+    flex-grow: 1;
+    max-height: 50px;
+    overflow: scroll;
+}
+
+i.button {
+    cursor: pointer;
+    padding: 12px;
+    background: #1485D4;
+    border: none;
+    color: white;
+    font-size: large;
+    transition: background .3s ease;
+}

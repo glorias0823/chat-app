@@ -3,7 +3,7 @@ const socket = io()
 // Elements
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
-const $messageFormButton = $messageForm.querySelector('button')
+const $messageFormButton = $messageForm.querySelector('button.send')
 const $messages = document.querySelector('#messages')
 
 // Templates
@@ -107,9 +107,13 @@ const clickDelete = (e) => {
     })
 }
 
+const selectFile = (e) => {
+    $messageForm.querySelector('input#messageFile').click()
+}
+
 const sendFile = (files) => {
     console.log(files[0])
-    const file = {
+        const file = {
         name: files[0].name,
         data: files[0],
         type: files[0].type
@@ -129,16 +133,20 @@ const sendFile = (files) => {
 }
 
 socket.on('file', (message) => {
+    try {
+        console.log('[client - file]', message)
+        const blob = new Blob([message.file.data], { type: message.file.type })
+        const url = window.URL.createObjectURL(blob)
 
-    const blob = new Blob([message.file.data], { type: message.file.type })
-    const url = window.URL.createObjectURL(blob)
-
-    const html = Mustache.render(fileTemplate, {
-        username: message.username,
-        url,
-        filename: message.file.name,
-        createdAt: moment(message.createdAt).format('YYYY-MM-DD h:mm a')
-    })
-    $messages.insertAdjacentHTML('beforeend', html)
-    autoscroll()
+        const html = Mustache.render(fileTemplate, {
+            username: message.username,
+            url,
+            filename: message.file.name,
+            createdAt: moment(message.createdAt).format('YYYY-MM-DD h:mm a')
+        })
+        $messages.insertAdjacentHTML('beforeend', html)
+        autoscroll()
+    } catch (e) {
+        console.log('file:', e)
+    }
 })

@@ -17,9 +17,11 @@
 
             <div class="compose">
                 <form id="message-form">
-                    <input type="file" id="messageFile" onchange="sendFile(this.files)" />
+                    <i class="button fa fa-paperclip"  onclick="selectFile(this)"></i>
                     <input name="message" placeholder="Message" required autocomplete="off">
-                    <button>Send</button>
+                    <button class="send">Send</button>
+                    <input type="file" id="messageFile" onchange="sendFile(this.files)" style='display: none' />
+                    <div class="divInput" contenteditable hidden></div>
                 </form>
             </div>
         </div>
