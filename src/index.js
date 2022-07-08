@@ -3,13 +3,12 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
-const fs = require('fs')
 const { generateMessage, generateLocationMessage, generateFileMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 
 const app = express()
 const server = http.createServer(app)
-const io = socketio(server)
+const io = socketio(server, {maxHttpBufferSize: 1e8})
 
 const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
@@ -45,8 +44,11 @@ io.on('connection', (socket) => {
         if (filter.isProfane(message)) {
             return callback('Profanity is not allowed!')
         }
-
-        io.to(user.room).emit('message', generateMessage(user.username, message))
+    
+        if (user && user.room && user.username)
+            io.to(user.room).emit('message', generateMessage(user.username, message))
+        else
+            io.emit('message', generateMessage(socket.id, message))
         callback()
     })
 
@@ -59,7 +61,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
 
-        if (user) {
+        if (user && user.room && user.username) {
             io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
@@ -70,7 +72,12 @@ io.on('connection', (socket) => {
 
     socket.on('sendFile', (file, callback) => {
         const user = getUser(socket.id)
-        io.to(user.room).emit('file', generateFileMessage(user.username, file))
+        if (user && user.room && user.username) {
+            io.to(user.room).emit('file', generateFileMessage(user.username, file))
+        } else {
+            console.log('corrupted user: ', user)
+            io.emit('file', generateFileMessage(socket.id, file))
+        }
         callback()
     });
 
@@ -79,6 +86,10 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', generateMessage(user.username, `deleted ${filename}`))
         callback()
     });
+
+    // socket.onAny((eventNames, ...args)=>{
+    //     console.log('any ', eventNames, args)
+    // })
 
 })
 

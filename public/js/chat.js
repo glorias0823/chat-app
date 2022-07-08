@@ -68,7 +68,7 @@ $messageForm.addEventListener('submit', (e) => {
         $messageFormInput.focus()
 
         if (error) {
-            return console.log(error)
+            return alert(error)
         }
 
         console.log('Message delivered!')
@@ -112,8 +112,16 @@ const selectFile = (e) => {
 }
 
 const sendFile = (files) => {
+    const fileSize = files[0].size;
+    const fileMb = fileSize / 1024 ** 2;
+    if (fileMb >= 100) {
+        alert("Please select a file less than 100MB.")
+        files.target = null
+        return
+    }
+
     console.log(files[0])
-        const file = {
+    const file = {
         name: files[0].name,
         data: files[0],
         type: files[0].type
