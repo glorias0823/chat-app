@@ -8,7 +8,7 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users'
 
 const app = express()
 const server = http.createServer(app)
-const io = socketio(server, {maxHttpBufferSize: 1.5e8})
+const io = socketio(server, {maxHttpBufferSize: 2e8})
 
 const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
